@@ -48,8 +48,8 @@ def submit_patient_details(request):
             )
 
             from_email = settings.EMAIL_HOST_USER
-            recipient_list = ['dashytisbest@gmail.com']
-
+            recipient_list = [settings.EMAIL_HOST_USER]
+            
             # Send the email with patient details and images attached
             email = EmailMessage(email_subject, email_message, from_email, recipient_list)
             for img in images:
