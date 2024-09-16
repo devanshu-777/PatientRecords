@@ -1,0 +1,52 @@
+{% extends 'base_entrance.html' %}
+
+{% block title %}
+    Upload Images
+{% endblock %}
+
+{% block content %}
+    <h2>Upload Images of Patient's Condition</h2>
+
+    <form method="POST" enctype="multipart/form-data" action="{% url 'upload_images' %}">
+        {% csrf_token %}
+        <div id="image-fields">
+            <input type="file" name="patient_images" accept="image/*" capture="camera" required>
+        </div>
+        <button type="button" onclick="addImageField()">Add More Images</button>
+        <button type="button" onclick="removeImageField()">Remove Last Image</button>
+        <br><br>
+        <button type="submit">Upload</button>
+        <button type="button" onclick="window.history.back()">Back</button>
+    </form>
+{% endblock %}
+
+<script>
+    let imageCount = 1;
+
+    function openCamera(inputElement) {
+        inputElement.setAttribute('capture', 'camera');
+        inputElement.click();
+    }
+
+    function addImageField() {
+        if (imageCount < 10) {
+            imageCount++;
+            const newField = document.createElement('input');
+            newField.type = 'file';
+            newField.name = 'patient_images';
+            newField.accept = 'image/*';
+            newField.capture = 'camera';
+            document.getElementById('image-fields').appendChild(newField);
+        } else {
+            alert('Maximum of 10 images can be uploaded.');
+        }
+    }
+
+    function removeImageField() {
+        if (imageCount > 1) {
+            const fields = document.getElementById('image-fields');
+            fields.removeChild(fields.lastChild);
+            imageCount--;
+        }
+    }
+</script>

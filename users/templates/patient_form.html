@@ -1,0 +1,89 @@
+{% extends "base_entrance.html" %}
+
+{% block title %}Patient Form{% endblock %}
+
+{% block content %}
+    <h2>Patient Form</h2>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'submit_patient_details' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <h3>Upload Images of Patient's Condition</h3>
+        <div id="image-fields">
+            <!-- Initial image input field with preview -->
+            <div class="image-container">
+                <input type="file" name="patient_images" accept="image/*" capture="camera" id="image-1" class="image-input">
+                <img id="preview-1" class="image-preview" style="display: none;">
+            </div>
+        </div>
+
+        <button type="button" onclick="addImageField()">Add More Images</button>
+        <button type="button" onclick="removeImageField()">Remove Last Image</button>
+
+        <br><br>
+        <button type="submit">Next</button>
+        <a href="{% url 'index' %}">
+            <button type="button">Back</button>
+        </a>
+    </form>
+{% endblock %}
+
+<script>
+    let imageCount = 1;
+
+    function addImageField() {
+        if (imageCount < 10) {
+            imageCount++;
+            const container = document.createElement('div');
+            container.classList.add('image-container');
+            
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.name = 'patient_images'; // Ensure the name is the same to handle multiple files
+            input.accept = 'image/*';
+            input.id = `image-${imageCount}`;
+            input.classList.add('image-input');
+            
+            const preview = document.createElement('img');
+            preview.classList.add('image-preview');
+            preview.id = `preview-${imageCount}`;
+            preview.style.display = 'none';
+            
+            input.addEventListener('change', function() {
+                const file = input.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.innerText = 'Remove';
+            removeButton.addEventListener('click', function() {
+                container.remove();
+                imageCount--;
+            });
+            
+            container.appendChild(input);
+            container.appendChild(preview);
+            container.appendChild(removeButton);
+            
+            document.getElementById('image-fields').appendChild(container);
+        } else {
+            alert('Maximum of 10 images can be uploaded.');
+        }
+    }
+
+    function removeImageField() {
+        const fields = document.getElementById('image-fields');
+        if (fields.children.length > 1) {
+            fields.removeChild(fields.lastChild);
+            imageCount--;
+        }
+    }
+</script>

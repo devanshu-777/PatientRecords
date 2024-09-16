@@ -1,0 +1,18 @@
+{% extends "base_entrance.html" %}
+
+{% block title %}Sign in{% endblock %}
+
+{% block content %}
+    {% load socialaccount %}
+    {% if not user.is_authenticated %}
+        <h2>Login</h2>
+        <a href="{% provider_login_url 'google' %}?next=/">Login</a>
+    {% else %}
+        <p>You are signed in as {{user}}</p>
+        <a href="{% url 'account_logout' %}">Logout</a>
+        <br>
+        <a href="{% url 'submit_patient_details' %}">
+            <button>Patient Form</button>
+        </a>
+    {% endif %}
+{% endblock %}
