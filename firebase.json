@@ -1,6 +1,6 @@
 {
     "hosting": {
-      "public": "patientrecords",
+      "public": "patientrecords/users/templates",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
     }
 }  
