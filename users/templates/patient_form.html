@@ -1,89 +1,126 @@
-{% extends "base_entrance.html" %}
+{% extends 'base_entrance.html' %}
 
-{% block title %}Patient Form{% endblock %}
+{% block title %}
+    Patient Form
+{% endblock %}
 
 {% block content %}
     <h2>Patient Form</h2>
-    <form method="POST" enctype="multipart/form-data" action="{% url 'submit_patient_details' %}">
+    <form id="patient-form" method="POST" enctype="multipart/form-data" action="{% url 'submit_patient_details' %}">
         {% csrf_token %}
         {{ form.as_p }}
 
         <h3>Upload Images of Patient's Condition</h3>
         <div id="image-fields">
-            <!-- Initial image input field with preview -->
-            <div class="image-container">
-                <input type="file" name="patient_images" accept="image/*" capture="camera" id="image-1" class="image-input">
-                <img id="preview-1" class="image-preview" style="display: none;">
-            </div>
+            <label for="patient_image_input">Upload Image(s):</label>
+            <input type="file" id="patient_image_input" name="patient_images" accept="image/*" capture="environment" class="image-input" multiple onchange="handleFileSelect(event)">
         </div>
-
-        <button type="button" onclick="addImageField()">Add More Images</button>
-        <button type="button" onclick="removeImageField()">Remove Last Image</button>
+        <div id="selected-images-container"></div>
 
         <br><br>
-        <button type="submit">Next</button>
+        <button type="submit">Submit</button>
         <a href="{% url 'index' %}">
             <button type="button">Back</button>
         </a>
     </form>
-{% endblock %}
 
-<script>
-    let imageCount = 1;
+    <script>
+        let filesArray = [];
 
-    function addImageField() {
-        if (imageCount < 10) {
-            imageCount++;
-            const container = document.createElement('div');
-            container.classList.add('image-container');
-            
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.name = 'patient_images'; // Ensure the name is the same to handle multiple files
-            input.accept = 'image/*';
-            input.id = `image-${imageCount}`;
-            input.classList.add('image-input');
-            
-            const preview = document.createElement('img');
-            preview.classList.add('image-preview');
-            preview.id = `preview-${imageCount}`;
-            preview.style.display = 'none';
-            
-            input.addEventListener('change', function() {
-                const file = input.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.src = e.target.result;
-                        preview.style.display = 'block';
-                    };
-                    reader.readAsDataURL(file);
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            const maxCombinedSize = 25 * 1024 * 1024;
+            let totalSize = filesArray.reduce((sum, file) => sum + file.size, 0);
+            let filesAdded = false;
+        
+            for (let file of files) {
+                if (totalSize + file.size > maxCombinedSize) {
+                    alert(
+                        `Adding "${file.name}" exceeds the total file size limit of 25 MB. It will not be added.`
+                    );
+                    continue;
                 }
-            });
-            
-            const removeButton = document.createElement('button');
-            removeButton.type = 'button';
-            removeButton.innerText = 'Remove';
-            removeButton.addEventListener('click', function() {
-                container.remove();
-                imageCount--;
-            });
-            
-            container.appendChild(input);
-            container.appendChild(preview);
-            container.appendChild(removeButton);
-            
-            document.getElementById('image-fields').appendChild(container);
-        } else {
-            alert('Maximum of 10 images can be uploaded.');
+        
+                filesArray.push(file);
+                totalSize += file.size;
+                displayFile(file);
+                filesAdded = true;
+            }
+        
+            if (!filesAdded) {
+                event.target.value = '';
+            }
+        
+            syncFileInput();
         }
-    }
 
-    function removeImageField() {
-        const fields = document.getElementById('image-fields');
-        if (fields.children.length > 1) {
-            fields.removeChild(fields.lastChild);
-            imageCount--;
+        function displayFile(file) {
+            const container = document.getElementById('selected-images-container');
+        
+            const imageContainer = document.createElement('div');
+            imageContainer.className = 'image-preview-container';
+            imageContainer.style.position = 'relative';
+
+            const img = document.createElement('img');
+            img.className = 'image-preview';
+            img.src = URL.createObjectURL(file);
+            img.onload = function() {
+                URL.revokeObjectURL(this.src);
+            };
+            img.width = 150;
+            img.height = 150;
+        
+            const removeButton = document.createElement('button');
+            removeButton.className = 'remove-image';
+            removeButton.innerText = 'X';
+            removeButton.style.position = 'absolute';
+            removeButton.style.top = '5px';
+            removeButton.style.right = '5px';
+            removeButton.addEventListener('click', () => removeFile(file, imageContainer));
+        
+            imageContainer.appendChild(img);
+            imageContainer.appendChild(removeButton);
+        
+            container.appendChild(imageContainer);
         }
-    }
-</script>
+
+        function removeFile(file, imageContainer) {
+            filesArray = filesArray.filter(f => f !== file);
+            imageContainer.remove();
+            syncFileInput();
+        }
+
+        function syncFileInput() {
+            const fileInput = document.getElementById('patient_image_input');
+    
+            const dataTransfer = new DataTransfer();
+    
+            filesArray.forEach(file => dataTransfer.items.add(file));
+    
+            fileInput.files = dataTransfer.files;
+    
+            updateFileCount();
+        }
+
+        function updateFileCount() {
+            const fileCountDisplay = document.getElementById('file-count');
+            if (fileCountDisplay) {
+                fileCountDisplay.textContent = `${filesArray.length} file(s) selected`;
+            }
+        }
+
+        document.getElementById('patient-form').addEventListener('submit', function (event) {
+            if (filesArray.length === 0) {
+                alert('Please upload at least one image.');
+                event.preventDefault();
+                return;
+            }
+        
+            // Append files to FormData manually
+            const formData = new FormData(this);
+            filesArray.forEach((file, index) => {
+                formData.append(`patient_images_${index}`, file);
+            });
+        });
+    </script>    
+{% endblock %}

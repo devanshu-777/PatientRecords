@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.contrib import messages
+from django.core.mail import EmailMessage
+from django.conf import settings
+from .forms import PatientDetailsForm
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     return render(request, "index.html")
@@ -14,11 +18,6 @@ def logout_view(request):
     messages.success(request, "You have been logged out successfully.")
     return redirect("/")
 
-from django.core.mail import EmailMessage
-from django.conf import settings
-from .forms import PatientDetailsForm
-from django.contrib.auth.decorators import login_required
-
 @login_required
 def submit_patient_details(request):
     if request.method == 'POST':
@@ -29,7 +28,6 @@ def submit_patient_details(request):
 
             # Handle image uploads
             images = request.FILES.getlist('patient_images')
-
             # Prepare email content
             email_subject = f"{patient_details['name_of_patient']} - {patient_details['diagnosis']}"
             email_message = (
@@ -47,11 +45,10 @@ def submit_patient_details(request):
                 f"Roll Number: {patient_details['roll_number']}"
             )
 
-            from_email = settings.EMAIL_HOST_USER
-            recipient_list = [settings.EMAIL_HOST_USER]
-            
+            recipient_list = ['dashytisbest@gmail.com']
+
             # Send the email with patient details and images attached
-            email = EmailMessage(email_subject, email_message, from_email, recipient_list)
+            email = EmailMessage(email_subject, email_message, settings.DEFAULT_FROM_EMAIL, recipient_list)
             for img in images:
                 email.attach(img.name, img.read(), img.content_type)
             email.send()
