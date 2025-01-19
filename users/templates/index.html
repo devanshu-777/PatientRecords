@@ -6,7 +6,7 @@
     {% load socialaccount %}
     {% if not user.is_authenticated %}
         <h2>Login</h2>
-        <a href="{% provider_login_url 'google' %}?next=/">Login</a>
+        <a href="{% provider_login_url 'google' %}">Login</a>
     {% else %}
         <p>You are signed in as {{user}}</p>
         <a href="{% url 'account_logout' %}">Logout</a>
