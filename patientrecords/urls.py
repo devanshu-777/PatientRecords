@@ -15,11 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from users.views import submit_patient_details
+from django.shortcuts import redirect
+
+def user_login_redirect(request):
+    # Redirect users to Google OAuth login
+    return redirect("/accounts/google/login/")
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include("allauth.urls")),
-    path('', include("users.urls")),
-    path('submit-patient-details/', submit_patient_details, name='submit_patient_details'),
+    path('admin/', admin.site.urls),  # Admin login works with Django's default login page
+    path('accounts/', include("allauth.urls")),  # Allauth URLs for OAuth login
+    path('', include("users.urls")),  # User-defined views
+    path('login/', user_login_redirect, name="login"),  # Custom login route for users
 ]
