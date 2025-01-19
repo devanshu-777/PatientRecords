@@ -1,1 +1,1 @@
-web:gunicorn patientrecords.wsgi
+web: gunicorn patientrecords.wsgi
