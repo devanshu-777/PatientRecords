@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['patientrecords-0d2a8f1b9dd0.herokuapp.com', '127.0.0.1']
 
-SITE_ID = 2
+SITE_ID = 1
 
 # Application definition
 
