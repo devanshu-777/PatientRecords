@@ -165,9 +165,6 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "/admin/login"
 
-# ACCOUNT_ADAPTER = 'patientrecords.adapters.NoNewUsersAccountAdapter'
-# SOCIALACCOUNT_ADAPTER = 'patientrecords.adapters.NoNewUsersSocialAccountAdapter'
-
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_ONLY = True
 
