@@ -94,8 +94,12 @@ WSGI_APPLICATION = 'patientrecords.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd5cadac6koglek',
+        'USER': 'ubnken2e0qhv81',
+        'PASSWORD': 'pad14ee6f03cc7a545d2feaa2c2bb3db5ab8341cd56033dd04d4931c15dd84c6a',
+        'HOST': 'c5p86clmevrg5s.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
