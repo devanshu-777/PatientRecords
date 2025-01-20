@@ -29,7 +29,7 @@ def submit_patient_details(request):
             # Handle image uploads
             images = request.FILES.getlist('patient_images')
             # Prepare email content
-            email_subject = f"{patient_details['name_of_patient']} - {patient_details['opd_number']} /{patient_details['case_year']} - {patient_details['diagnosis']}"
+            email_subject = f"{patient_details['name_of_patient']} - {patient_details['opd_number']} /{patient_details['case_year']} - {patient_details['diagnosis']} /{patient_details.get('peripheral_opd', 'N/A')}"
             email_message = (
                 f"OPD Number: {patient_details['opd_number']}\n"
                 f"Case Year: {patient_details['case_year']}\n"
@@ -39,8 +39,8 @@ def submit_patient_details(request):
                 f"Age: {patient_details['age']}\n"
                 f"Gender: {patient_details['gender']}\n"
                 f"Diagnosis: {patient_details['diagnosis']}\n"
-                f"Visit Count: {patient_details.get('visit_count', 'N/A')}\n"
-                f"Name of User: {patient_details['name_of_user']}\n"
+                f"Peripheral OPD: {patient_details.get('peripheral_opd', 'N/A')}\n"
+                f"Name of Intern: {patient_details['name_of_intern']}\n"
                 f"Academic Year: {patient_details['academic_year']}\n"
                 f"Roll Number: {patient_details['roll_number']}"
             )
