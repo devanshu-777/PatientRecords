@@ -45,7 +45,7 @@ def submit_patient_details(request):
                 f"Roll Number: {patient_details['roll_number']}"
             )
 
-            recipient_list = ['dashytisbest@gmail.com']
+            recipient_list = ['cases2.ahmc@gmail.com']
 
             # Send the email with patient details and images attached
             email = EmailMessage(email_subject, email_message, settings.DEFAULT_FROM_EMAIL, recipient_list)
