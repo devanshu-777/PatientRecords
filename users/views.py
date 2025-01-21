@@ -39,7 +39,7 @@ def submit_patient_details(request):
                 f"Age: {patient_details['age']}\n"
                 f"Gender: {patient_details['gender']}\n"
                 f"Diagnosis: {patient_details['diagnosis']}\n"
-                f"Peripheral OPD: {patient_details.get('peripheral_opd', 'N/A')}\n"
+                f"Peripheral OPD Name: {patient_details.get('peripheral_opd', 'N/A')}\n"
                 f"Name of Intern: {patient_details['name_of_intern']}\n"
                 f"Academic Year: {patient_details['academic_year']}\n"
                 f"Roll Number: {patient_details['roll_number']}"
