@@ -1,5 +1,6 @@
 from django import forms
 import datetime
+from django.utils.safestring import mark_safe
 
 current_date = datetime.datetime.now()
 current_month = current_date.month
@@ -25,3 +26,9 @@ class PatientDetailsForm(forms.Form):
     name_of_intern = forms.CharField(label='Name of Intern', max_length=200)
     academic_year = forms.ChoiceField(label="Academic Year", choices=academic_year_choices, initial=default_academic_year, required=False)
     roll_number = forms.CharField(label='Roll Number', max_length=100)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field.required:
+                field.label = mark_safe(f"{field.label} <span style='color: red;'>*</span>")
