@@ -1,7 +1,14 @@
 from django import forms
 import datetime
 
-current_year = datetime.datetime.now().year
+current_date = datetime.datetime.now()
+current_month = current_date.month
+
+if current_month <= 3:  # January to March
+    current_year = current_date.year - 1
+else:  # April to December
+    current_year = current_date.year
+    
 academic_year_choices = [(f"{year}-{year + 1}", f"{year}-{year + 1}") for year in range(current_year - 5, current_year + 6)]
 default_academic_year = f"{current_year}-{current_year + 1}"
 
