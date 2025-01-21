@@ -11,6 +11,10 @@
         {{ form.as_p }}
 
         <h3>Upload Images of Patient's Condition</h3>
+        <div class="checkbox-container">
+            <input type="checkbox" id="agree-checkbox">
+            <label for="agree-checkbox">I have taken consent of the patient.</label>
+        </div>
         <div id="image-fields">
             <label for="patient_image_input" class="custom-file-button">Click Photo(s):</label>
             <input type="file" id="patient_image_input" name="patient_images" accept="image/*" capture="environment" class="image-input" multiple onchange="handleFileSelect(event)">
@@ -18,10 +22,6 @@
         <div id="selected-images-container"></div>
 
         <br>
-        <div>
-            <input type="checkbox" id="agree-checkbox">
-            <label for="agree-checkbox">I have taken the consent of the patient.</label>
-        </div>
         <br>
         
         <button type="submit">Submit</button>
