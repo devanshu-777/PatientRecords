@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
+from django.conf.urls import handler404
 
 def user_login_redirect(request):
     # Redirect users to Google OAuth login
@@ -27,3 +28,5 @@ urlpatterns = [
     path('', include("users.urls")),  # User-defined views
     path('login/', user_login_redirect, name="login"),  # Custom login route for users
 ]
+
+handler404 = 'users.views.custom_404_view'
