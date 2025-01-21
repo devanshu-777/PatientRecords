@@ -17,7 +17,13 @@
         </div>
         <div id="selected-images-container"></div>
 
-        <br><br>
+        <br>
+        <div>
+            <input type="checkbox" id="agree-checkbox">
+            <label for="agree-checkbox">I have taken the consent of the patient.</label>
+        </div>
+        <br>
+        
         <button type="submit">Submit</button>
         <a href="{% url 'index' %}">
             <button type="button">Back</button>
@@ -121,6 +127,14 @@
             filesArray.forEach((file, index) => {
                 formData.append(`patient_images_${index}`, file);
             });
+
+            const checkbox = document.getElementById('agree-checkbox');
+            if (!checkbox.checked) {
+                alert('You must agree to the confirmation statement before submitting the form.');
+                
+                // Prevent form submission
+                event.preventDefault();
+            }
         });
     </script>    
 {% endblock %}
