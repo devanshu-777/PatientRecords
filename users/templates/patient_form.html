@@ -5,30 +5,48 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Patient Form</h2>
-    <form id="patient-form" method="POST" enctype="multipart/form-data" action="{% url 'submit_patient_details' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
+<div id="patient-form-container">
+    <div class="patient-form-container">
+        <h2>Patient Form</h2>
+        <form id="patient-form" method="POST" enctype="multipart/form-data" action="{% url 'submit_patient_details' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
 
-        <h3>Upload Images of Patient's Condition</h3>
-        <div class="checkbox-container">
-            <input type="checkbox" id="agree-checkbox">
-            <label for="agree-checkbox">I have taken consent of the patient.</label>
-        </div>
-        <div id="image-fields">
-            <label for="patient_image_input" class="custom-file-button">Click Photo(s):</label>
-            <input type="file" id="patient_image_input" name="patient_images" accept="image/*" capture="environment" class="image-input" multiple onchange="handleFileSelect(event)">
-        </div>
-        <div id="selected-images-container"></div>
+            <!-- Custom file button and label -->
+            <label for="patient_image_input" class="custom-file-button">
+                Upload Images of Patient's Condition
+            </label>
 
-        <br>
-        <br>
-        
-        <button type="submit">Submit</button>
-        <a href="{% url 'index' %}">
-            <button type="button">Back</button>
-        </a>
-    </form>
+            <div class="checkbox-container">
+                <input type="checkbox" id="agree-checkbox">
+                <label for="agree-checkbox">I have taken consent of the patient.</label>
+            </div>
+
+            <div id="image-fields">
+                <label for="patient_image_input" class="custom-file-button">Click Photo(s):</label>
+                <input 
+                    type="file" 
+                    id="patient_image_input" 
+                    name="patient_images" 
+                    accept="image/*" 
+                    capture="environment" 
+                    class="image-input" 
+                    multiple 
+                    onchange="handleFileSelect(event)"
+                >
+            </div>
+
+            <div id="selected-images-container"></div>
+
+            <br><br>
+            
+            <button id="submit-button" type="submit">Submit</button>
+            <a href="{% url 'index' %}">
+                <button type="button">Back</button>
+            </a>
+        </form>
+    </div>
+</div>
 
     <script>
         let filesArray = [];
@@ -131,10 +149,12 @@
             const checkbox = document.getElementById('agree-checkbox');
             if (!checkbox.checked) {
                 alert('You must agree to the confirmation statement before submitting the form.');
-                
-                // Prevent form submission
                 event.preventDefault();
             }
+
+            const submitButton = document.getElementById('submit-button');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
         });
     </script>    
 {% endblock %}
